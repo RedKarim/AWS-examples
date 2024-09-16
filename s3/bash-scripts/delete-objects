@@ -1,15 +1,29 @@
 #!/usr/bin/env bash
 
 echo "==delete-objects"
-# Exit immediately if any command returns a zero 
+
+# Exit immediately if any command fails
 set -e
 
-#Check for bucket name
+# Check for bucket name
 if [ -z "$1" ]; then
-    echo "there needs to be a bucket name eg. ./bucket my-bucket-name."
+    echo "There needs to be a bucket name, e.g., ./bucket my-bucket-name."
     exit 1
 fi
 
-BUCKET_NAME=$1  
+BUCKET_NAME=$1
 
-aws s3api delete-objects --bucket $BUCKET_NAME
+# List objects in the bucket
+OBJECTS=$(aws s3api list-objects-v2 --bucket "$BUCKET_NAME" --query 'Contents[].{Key: Key}' --output json)
+
+# Check if the bucket is empty
+if [ "$OBJECTS" == "[]" ]; then
+    echo "Bucket is empty, nothing to delete."
+    exit 0
+fi
+
+# Generate delete command with the object keys
+echo "Deleting all objects from bucket: $BUCKET_NAME"
+aws s3api delete-objects --bucket "$BUCKET_NAME" --delete "{\"Objects\": $OBJECTS}"
+
+echo "Successfully deleted all objects from $BUCKET_NAME"
