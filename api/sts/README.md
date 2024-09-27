@@ -7,8 +7,8 @@ You can use the AWS Security Token Service (AWS STS) to create and provide trust
 Create user and generate access keys
 
 ```sh
-aws iam crate-user --user-name sts-Bob
-aws iam create-access-key --user-name sts-Bob --output table
+aws iam crate-user --user-name sts-machine-user
+aws iam create-access-key --user-name sts-machine-user --output table
 ```
 
 Copy the access key and secret
@@ -34,7 +34,7 @@ Test you don't have permissions
 
 ```sh
 aws s3 ls --profile sts
-aws s3 ls s3://sts-exe-tc123 --profile sts
+aws s3 ls s3://sts-fun-mk1223 --profile sts
 ```
 
 > An error occurred (AccessDenied) when calling the ListBuckets operation: Access Denied
@@ -54,7 +54,7 @@ Attach the policy to the user
 
 ```sh
 aws iam put-user-policy \
-    --user-name sts-Bob \
+    --user-name sts-machine-user \
     --policy-name StsAssumePolicy \
     --policy-document file://policy.json
 ```
@@ -63,7 +63,7 @@ Assume role
 
 ```sh
 aws sts assume-role \
-    --role-arn arn:aws:iam::992382461243:role/sts-stack-exe-tc123-StsRole-3KfW1OhlsxQZ \
+    --role-arn arn:aws:iam:: \
     --role-session-name s3-sts-example \
     --profile sts
 ```
@@ -85,7 +85,7 @@ Test you have permissions
 
 ```sh
 aws s3 ls --profile assumed
-aws s3 ls s3://sts-exe-tc123 --profile assumed
+aws s3 ls s3://sts-fun-mk1223 --profile assumed
 ```
 
 ## Destroy
@@ -93,7 +93,7 @@ aws s3 ls s3://sts-exe-tc123 --profile assumed
 Tear down stack and delete user
 
 ```sh
-aws iam delete-user-policy --user-name sts-Bob --policy-name StsAssumePolicy
-aws iam delete-access-key --user-name sts-Bob --access-key-id AKIA6ODU2UU5TPERR46T
-aws iam delete-user --user-name sts-Bob
+aws iam delete-user-policy --user-name sts-machine-user --policy-name StsAssumePolicy
+aws iam delete-access-key --user-name sts-machine-user --access-key-id w
+aws iam delete-user --user-name sts-machine-user
 ```
