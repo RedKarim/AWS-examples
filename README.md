@@ -1,2 +1,2 @@
 # AWS-examples
-A codebase of all AWS examples used through Solution Architectn course by Andrew Brown
+A codebase of all AWS examples used through Solution Architect course by Andrew Brown
